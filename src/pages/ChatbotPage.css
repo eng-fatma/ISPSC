@@ -1,0 +1,166 @@
+
+.gemini-chat-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 90px);
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: 'Cairo', sans-serif;
+  position: relative;
+}
+
+/* الشريط العلوي */
+.gemini-chat-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 4px;
+}
+.gemini-chat-topbar h1 { font-size: 1.2rem; font-weight: 800; color: var(--dark); }
+
+.gemini-menu-wrapper { position: relative; }
+.gemini-dots-btn {
+  background: var(--cream); border: none; width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; color: var(--pr); cursor: pointer; transition: 0.2s;
+}
+.gemini-dots-btn:hover { background: var(--pr); color: #fff; }
+
+.gemini-history-dropdown {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  box-shadow: 0 10px 30px rgba(12,35,24,0.12);
+  min-width: 220px;
+  padding: 8px;
+  z-index: 50;
+  animation: dropdownIn 0.2s ease;
+}
+@keyframes dropdownIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+.history-item {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; text-align: right; background: none; border: none;
+  padding: 10px 12px; border-radius: var(--rs); cursor: pointer;
+  font-family: 'Cairo', sans-serif; font-size: 0.86rem; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.history-item:hover { background: var(--cream); }
+.history-item.new-chat { color: var(--pr); font-weight: 700; }
+.history-divider { font-size: 0.72rem; color: var(--tl); padding: 8px 12px 4px; }
+
+/* منطقة الرسائل */
+.gemini-chat-body { flex: 1; overflow-y: auto; padding: 10px; }
+
+.gemini-empty-state {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6px;
+}
+.gemini-empty-icon { font-size: 3rem; margin-bottom: 8px; }
+.gemini-empty-state h2 { font-size: 1.4rem; font-weight: 800; color: var(--dark); }
+.gemini-empty-state p { color: var(--tm); font-size: 0.9rem; margin-bottom: 20px; }
+
+.gemini-suggestions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 500px; }
+.gemini-suggestion-chip {
+  background: var(--cream); border: 1px solid var(--border); border-radius: 100px;
+  padding: 10px 18px; font-family: 'Cairo', sans-serif; font-size: 0.85rem; color: var(--prd);
+  cursor: pointer; transition: 0.2s;
+}
+.gemini-suggestion-chip:hover { background: var(--pr); color: #fff; border-color: var(--pr); }
+
+.gemini-messages { display: flex; flex-direction: column; gap: 14px; padding: 10px 4px; }
+.gemini-msg { display: flex; flex-direction: column; max-width: 78%; }
+.gemini-msg.user { align-self: flex-end; align-items: flex-end; }
+.gemini-msg.bot { align-self: flex-start; align-items: flex-start; }
+
+.gemini-bubble {
+  padding: 12px 16px;
+  border-radius: 18px;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+.gemini-msg.user .gemini-bubble { background: var(--pr); color: #fff; border-bottom-left-radius: 4px; }
+.gemini-msg.bot .gemini-bubble { background: var(--cream); color: var(--text); border-bottom-right-radius: 4px; }
+
+.gemini-msg-image {
+  max-width: 220px;
+  border-radius: 14px;
+  margin-bottom: 6px;
+}
+
+.gemini-bubble.typing { display: flex; gap: 4px; align-items: center; padding: 14px 18px; }
+.gemini-bubble.typing span {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--tl);
+  animation: typingBounce 1.2s infinite ease-in-out;
+}
+.gemini-bubble.typing span:nth-child(2) { animation-delay: 0.15s; }
+.gemini-bubble.typing span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes typingBounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+/* منطقة الكتابة */
+.gemini-input-area {
+  padding: 10px 4px 16px;
+  position: sticky;
+  bottom: 0;
+  background: var(--cream);
+  z-index: 10;
+}
+
+.gemini-image-preview-row {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+}
+.gemini-image-preview-row img { width: 56px; height: 56px; object-fit: cover; border-radius: 10px; }
+.gemini-image-preview-row button {
+  background: var(--cream-d); border: none; width: 22px; height: 22px; border-radius: 50%;
+  cursor: pointer; font-size: 0.7rem;
+}
+
+.gemini-input-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 30px;
+  padding: 8px 10px;
+  box-shadow: 0 4px 16px rgba(12,35,24,0.06);
+}
+.gemini-input-pill:focus-within { border-color: var(--pr); }
+
+.gemini-icon-btn {
+  background: none; border: none; width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; color: var(--tm); cursor: pointer; transition: 0.2s; flex-shrink: 0;
+}
+.gemini-icon-btn:hover { background: var(--cream); color: var(--pr); }
+.gemini-icon-btn.recording { background: #fdecea; color: #d32f2f; animation: pulseRec 1s infinite; }
+@keyframes pulseRec { 0%, 100% { box-shadow: 0 0 0 0 rgba(211,47,47,0.3); } 50% { box-shadow: 0 0 0 6px rgba(211,47,47,0); } }
+
+.gemini-input-field {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.92rem;
+  padding: 6px;
+}
+
+.gemini-send-btn {
+  background: var(--pr); color: #fff; border: none; width: 38px; height: 38px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; flex-shrink: 0;
+}
+.gemini-send-btn:hover:not(:disabled) { background: var(--prd); transform: scale(1.05); }
+.gemini-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+@media (max-width: 600px) {
+  .gemini-chat-page { height: calc(100vh - 70px); padding: 0 6px; }
+  .gemini-msg { max-width: 88%; }
+}

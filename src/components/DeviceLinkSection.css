@@ -1,0 +1,78 @@
+/* src/components/DeviceLinkSection.css — قسم ربط جهاز التحليل في الإعدادات */
+.dls-card { display: flex; flex-direction: column; gap: 14px; }
+
+.dls-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.dls-title { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.dls-title strong { font-size: 1rem; font-weight: 800; color: var(--text); }
+.dls-title small { color: var(--tl); font-size: 0.74rem; text-align: right; }
+
+.dls-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 100px; font-size: 0.76rem; font-weight: 700; flex: none; }
+.dls-pill i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.dls-pill.online { background: rgba(34, 197, 94, 0.14); color: #15803d; }
+.dls-pill.offline { background: rgba(220, 38, 38, 0.12); color: #b91c1c; }
+
+.dls-rows { background: var(--cream); border-radius: var(--r); padding: 4px 14px; }
+.dls-rows > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--cream-d); font-size: 0.84rem; }
+.dls-rows > div:last-child { border-bottom: none; }
+.dls-rows span { color: var(--tm); }
+.dls-rows strong { color: var(--text); font-weight: 700; }
+.dls-rows strong.warn { color: #b45309; }
+.dls-rows select {
+  max-width: 55%;
+  padding: 5px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--rs);
+  background: #fff;
+  color: var(--text);
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.82rem;
+}
+.dls-rows select:focus { outline: none; border-color: var(--pr); }
+
+.dls-sub { font-size: 0.84rem; font-weight: 800; color: var(--text); }
+.dls-sub small { font-weight: 600; color: var(--tl); }
+.dls-reading { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.dls-reading > div { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 12px 6px; border: 1px solid var(--border); border-radius: var(--r); background: #fff; }
+.dls-reading strong { font-size: 1.05rem; font-weight: 800; color: var(--pr); }
+.dls-reading span { font-size: 0.72rem; color: var(--tm); }
+
+.dls-auto { border-top: 1px solid var(--cream); padding-top: 12px; font-size: 0.86rem; }
+
+.dls-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.dls-actions .btn-premium:disabled { opacity: 0.55; cursor: not-allowed; }
+.dls-unlink { margin-inline-start: auto; background: none; border: none; color: #c0392b; font-family: 'Cairo', sans-serif; font-size: 0.82rem; font-weight: 700; cursor: pointer; padding: 6px 4px; }
+.dls-unlink:hover { text-decoration: underline; }
+
+.dls-confirm { background: rgba(192, 57, 43, 0.07); border: 1px solid rgba(192, 57, 43, 0.25); border-radius: var(--r); padding: 12px 14px; }
+.dls-confirm p { margin: 0 0 10px; font-size: 0.82rem; line-height: 1.8; color: var(--text); }
+
+.dls-rename { display: flex; align-items: center; gap: 6px; }
+.dls-rename input { flex: 1; min-width: 0; padding: 6px 10px; border: 1.5px solid var(--pr); border-radius: var(--rs); font-family: 'Cairo', sans-serif; font-size: 0.9rem; outline: none; }
+.dls-mini { padding: 5px 12px; border: none; border-radius: var(--rs); background: var(--cream); color: var(--prd); font-family: 'Cairo', sans-serif; font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+.dls-mini.primary { background: var(--pr); color: #fff; }
+
+@media (max-width: 480px) {
+  .dls-reading { grid-template-columns: 1fr; }
+  .dls-unlink { margin-inline-start: 0; }
+}
+
+/* ===== الوضع الداكن ===== */
+[data-theme="dark"] .dls-title strong,
+[data-theme="dark"] .dls-rows strong,
+[data-theme="dark"] .dls-sub,
+[data-theme="dark"] .dls-confirm p { color: #eef3ee; }
+[data-theme="dark"] .dls-title small,
+[data-theme="dark"] .dls-sub small { color: #6b7a71; }
+[data-theme="dark"] .dls-rows { background: #0f1713; }
+[data-theme="dark"] .dls-rows > div { border-bottom-color: #263129; }
+[data-theme="dark"] .dls-rows span,
+[data-theme="dark"] .dls-reading span { color: #9aa79f; }
+[data-theme="dark"] .dls-rows select,
+[data-theme="dark"] .dls-reading > div,
+[data-theme="dark"] .dls-rename input { background: #0f1713; border-color: #263129; color: #eef3ee; }
+[data-theme="dark"] .dls-reading strong { color: #6fd39b; }
+[data-theme="dark"] .dls-auto { border-top-color: #263129; }
+[data-theme="dark"] .dls-pill.online { color: #6fd39b; }
+[data-theme="dark"] .dls-pill.offline { color: #f08a8a; }
+[data-theme="dark"] .dls-mini { background: #263129; color: #eef3ee; }
+[data-theme="dark"] .dls-mini.primary { background: var(--pr); }

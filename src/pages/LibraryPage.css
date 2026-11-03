@@ -1,0 +1,178 @@
+.library-header { margin-bottom: 18px; }
+.library-breadcrumb { font-size: 0.8rem; color: var(--tl); margin-bottom: 6px; }
+.library-header h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 4px; }
+.library-header p { color: var(--tm); font-size: 0.88rem; }
+
+.library-controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+
+.library-search {
+  flex: 1;
+  min-width: 200px;
+  max-width: 340px;
+  padding: 10px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--rs);
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.88rem;
+  outline: none;
+}
+.library-search:focus { border-color: var(--pr); }
+
+.library-filter-select {
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--rs);
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.85rem;
+  background: #fff;
+  cursor: pointer;
+}
+
+.library-results-count { color: var(--tm); font-size: 0.82rem; margin-bottom: 12px; }
+.library-no-results { text-align: center; color: var(--tl); padding: 40px; }
+
+/* الشبكة — الكروت جنب بعض، مش تحت بعض */
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.library-card {
+  background: #fff;
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.library-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 28px rgba(10, 30, 18, 0.12);
+  border-color: var(--pr);
+}
+
+.library-card-image {
+  height: 120px;
+  background: var(--cream);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pr);
+  flex-shrink: 0;
+}
+.library-card-image img { width: 100%; height: 100%; object-fit: cover; }
+.library-card-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255,255,255,0.92);
+  color: var(--prd);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+
+.library-card-body { padding: 14px; text-align: right; }
+.library-card-name { font-weight: 800; font-size: 0.95rem; color: var(--dark); margin-bottom: 2px; }
+.library-card-name-en { font-size: 0.72rem; color: var(--tl); margin-bottom: 8px; }
+.library-card-meta { display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--tm); }
+
+/* حالة التحميل */
+.skeleton-card {
+  height: 210px;
+  background: linear-gradient(90deg, var(--cream) 25%, #fff 50%, var(--cream) 75%);
+  background-size: 200% 100%;
+  animation: skeletonMove 1.4s infinite;
+}
+@keyframes skeletonMove { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ═══════ نافذة تفاصيل المحصول — بأنيميشن دخول وخروج ناعم ═══════ */
+.library-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 35, 24, 0.55);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: overlayFadeIn 0.25s ease forwards;
+}
+@keyframes overlayFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.library-modal {
+  background: #fff;
+  border-radius: var(--rl);
+  padding: 28px;
+  max-width: 520px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  animation: modalPopIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes modalPopIn {
+  from { opacity: 0; transform: scale(0.92) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.library-modal-close {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: var(--cream-d);
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: 0.2s;
+  z-index: 2;
+}
+.library-modal-close:hover { background: var(--pr); color: #fff; transform: rotate(90deg); }
+
+.library-modal-hero {
+  height: 170px;
+  background: var(--cream);
+  border-radius: var(--r);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pr);
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+.library-modal-hero img { width: 100%; height: 100%; object-fit: cover; }
+
+.library-modal h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; color: var(--dark); }
+.library-modal-subtitle { color: var(--tl); font-size: 0.85rem; margin-bottom: 18px; }
+
+.library-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.info-block { background: var(--cream); border-radius: var(--rs); padding: 10px 12px; }
+.info-label { display: block; font-size: 0.72rem; color: var(--tl); margin-bottom: 2px; }
+.info-value { font-weight: 700; font-size: 0.88rem; color: var(--dark); }
+
+.library-modal-section { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); text-align: right; }
+.library-modal-section h3 { font-size: 0.9rem; font-weight: 800; margin-bottom: 6px; color: var(--dark); }
+.library-modal-section p { color: var(--tm); font-size: 0.86rem; line-height: 1.7; margin: 0; }
+.library-modal-section.warning { background: #FFF8E8; border-radius: var(--rs); padding: 12px; border-top: none; }
+
+@media (max-width: 600px) {
+  .library-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .library-modal-grid { grid-template-columns: 1fr; }
+}

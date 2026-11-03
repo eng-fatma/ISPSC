@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap');
+@import './styles/variables.css';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: Clip;
+  max-width: 100%;
+}
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  direction: rtl;
+}
+/* تصحيح عام: خرائط Leaflet عندها z-index داخلي بيوصل لـ 1000 (أدوات التحكم زي +/- والطبقات)
+   وده كان بيخليها تطلع فوق أي Navbar ثابت بالموقع وقت السكرول.
+   السطر ده بيحبس كل الـ z-index الداخلي بتاع الخريطة جوه حدودها هي بس، فمايطلعش فوق حاجة تانية في الصفحة أبداً. */
+.leaflet-container {
+  z-index: 1;
+}
+
+/* نظام عام للانتقالات وحالات التحميل — قابل لإعادة الاستخدام في كل صفحات ISPSC */
+.page-transition {
+  min-height: 100%;
+  animation: pageTransitionIn var(--ds-duration-slow, 400ms) var(--ds-ease, ease);
+}
+
+@keyframes pageTransitionIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-loading {
+  min-height: clamp(280px, 52vh, 560px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 32px 20px;
+  color: var(--tm);
+  text-align: center;
+}
+
+.page-loading-mark {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  color: var(--pr);
+  background: var(--cream-d);
+  animation: pageLoadingPulse 1.4s ease-in-out infinite;
+}
+
+.page-loading-mark svg {
+  animation: pageLoadingSpin 1.1s linear infinite;
+}
+
+.page-loading strong {
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.page-loading-skeletons {
+  width: min(100%, 360px);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.page-loading-skeletons span {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: linear-gradient(100deg, var(--cream-d) 25%, var(--white) 45%, var(--cream-d) 65%);
+  background-size: 220% 100%;
+  animation: pageLoadingShimmer 1.3s linear infinite;
+}
+
+.page-loading-skeletons span:nth-child(2) { animation-delay: 120ms; }
+.page-loading-skeletons span:nth-child(3) { animation-delay: 240ms; }
+
+.page-loading-error { color: #c43b32; }
+.page-loading-error strong { color: #c43b32; }
+.page-loading-error p {
+  max-width: 420px;
+  margin: 0;
+  color: var(--tm);
+  font-size: 0.8rem;
+  line-height: 1.8;
+}
+
+.page-loading-retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 9px 13px;
+  border: 0;
+  border-radius: var(--rs);
+  color: var(--white);
+  background: var(--pr);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@keyframes pageLoadingPulse {
+  0%, 100% { transform: translateY(0); opacity: 0.72; }
+  50% { transform: translateY(-4px); opacity: 1; }
+}
+
+@keyframes pageLoadingSpin { to { transform: rotate(360deg); } }
+@keyframes pageLoadingShimmer { to { background-position: -220% 0; } }
+
+@media (max-width: 768px) {
+  .page-transition { animation-duration: 300ms; }
+  .page-loading { min-height: calc(100svh - 130px); padding-inline: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition,
+  .page-loading-mark,
+  .page-loading-mark svg,
+  .page-loading-skeletons span {
+    animation: none;
+  }
+}

@@ -1,0 +1,407 @@
+/* src/pages/FarmerMapView.css */
+/* الخريطة الزراعية بأسلوب NASA Worldview بألوان وخط المنصة (أخضر + Cairo + زوايا مدورة) */
+
+/* ===== الهيكل: الخريطة + الشريط الزمني تحتها ===== */
+.fmv-shell {
+  display: flex;
+  flex-direction: column;
+  height: clamp(560px, calc(100vh - 220px), 880px);
+  border-radius: var(--rl);
+  border: 1px solid var(--border);
+  background: var(--dark);
+  overflow: hidden;
+  isolation: isolate;
+  font-family: 'Cairo', sans-serif;
+}
+
+.fmv-stage { position: relative; flex: 1; min-height: 0; }
+.fmv-map { position: absolute; inset: 0; width: 100%; height: auto; background: #0b1a13; font-family: 'Cairo', sans-serif; }
+.fmv-map.leaflet-grab, .fmv-map.is-measuring { cursor: crosshair; }
+.fmv-map.leaflet-drag-target { cursor: grabbing; }
+
+/* ===== أزرار أيقونات (مشتركة) ===== */
+.fmv-icon-btn {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(12, 35, 24, 0.86);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  cursor: pointer;
+  transition: background var(--ds-duration-fast, 150ms), border-color var(--ds-duration-fast, 150ms);
+}
+.fmv-icon-btn:hover { background: rgba(26, 107, 66, 0.9); border-color: var(--mint); }
+.fmv-icon-btn.active { background: var(--pr); border-color: var(--mint); }
+.fmv-icon-btn.ghost { width: 28px; height: 28px; border: none; background: transparent; backdrop-filter: none; border-radius: 8px; color: rgba(255, 255, 255, 0.7); }
+.fmv-icon-btn.ghost:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+.fmv-icon-btn:focus-visible, .fmv-tabs button:focus-visible, .fmv-layer-head:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
+
+/* ===== أعلى اليمين: البحث والأزرار ===== */
+.fmv-topbar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1100;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  direction: rtl;
+}
+
+.fmv-search {
+  position: relative;
+  width: 340px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(12, 35, 24, 0.86);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+}
+.fmv-search:focus-within { border-color: var(--mint); }
+.fmv-search-icon { flex: none; color: rgba(255, 255, 255, 0.6); }
+.fmv-search input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.82rem;
+}
+.fmv-search input::placeholder { color: rgba(255, 255, 255, 0.5); }
+
+.fmv-search-results {
+  position: absolute;
+  top: 46px;
+  right: 0;
+  left: 0;
+  max-height: 260px;
+  overflow-y: auto;
+  background: rgba(12, 35, 24, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  padding: 4px;
+}
+.fmv-search-results button {
+  display: block;
+  width: 100%;
+  text-align: right;
+  background: none;
+  border: none;
+  color: #fff;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.fmv-search-results button:hover { background: rgba(77, 191, 136, 0.18); }
+.fmv-search-note { padding: 8px 10px; font-size: 0.78rem; color: rgba(255, 255, 255, 0.7); }
+
+/* ===== زووم ===== */
+.fmv-zoom {
+  position: absolute;
+  top: 62px;
+  right: 10px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ===== لوحة الطبقات (يسار) ===== */
+.fmv-panel {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  width: 310px;
+  max-height: calc(100% - 20px);
+  display: flex;
+  flex-direction: column;
+  background: rgba(12, 35, 24, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  color: #fff;
+  direction: rtl;
+  overflow: hidden;
+}
+
+.fmv-tabs { display: flex; align-items: stretch; border-bottom: 1px solid rgba(255, 255, 255, 0.12); flex: none; }
+.fmv-panel.collapsed .fmv-tabs { border-bottom: none; }
+.fmv-tabs button {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 11px 4px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: rgba(255, 255, 255, 0.65);
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.fmv-tabs button:hover { color: #fff; }
+.fmv-tabs button.active { color: #fff; border-bottom-color: var(--mint); background: rgba(77, 191, 136, 0.1); }
+.fmv-tabs .fmv-collapse { flex: none; width: 40px; border-right: 1px solid rgba(255, 255, 255, 0.12); border-bottom: 3px solid transparent; }
+
+.fmv-panel-body { flex: 1; min-height: 0; overflow-y: auto; padding: 8px 10px 12px; scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.25) transparent; }
+
+.fmv-group-title { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.02em; color: var(--sage); margin: 12px 2px 6px; }
+.fmv-group-title.nomargin { margin: 0 0 2px; }
+.fmv-group-title:first-child { margin-top: 6px; }
+
+/* عنصر طبقة */
+.fmv-layer { background: rgba(255, 255, 255, 0.06); border: 1px solid transparent; border-radius: 12px; margin-bottom: 6px; overflow: hidden; }
+.fmv-layer.on { background: rgba(77, 191, 136, 0.14); border-color: rgba(77, 191, 136, 0.45); }
+.fmv-layer-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  background: none;
+  border: none;
+  color: #fff;
+  text-align: right;
+  font-family: 'Cairo', sans-serif;
+  cursor: pointer;
+}
+.fmv-layer-head > svg { flex: none; color: rgba(255, 255, 255, 0.55); }
+.fmv-layer.on .fmv-layer-head > svg { color: var(--mint); }
+.fmv-layer-text { display: flex; flex-direction: column; min-width: 0; }
+.fmv-layer-text strong { font-size: 0.82rem; font-weight: 700; }
+.fmv-layer-text small { font-size: 0.68rem; color: rgba(255, 255, 255, 0.55); }
+
+.fmv-layer-body { padding: 0 12px 12px; }
+.fmv-layer-body p { margin: 0 0 10px; font-size: 0.72rem; line-height: 1.7; color: rgba(255, 255, 255, 0.75); }
+.fmv-layer-body p.fmv-note, .fmv-layer-body p.fmv-warn { margin: 8px 0 0; }
+
+.fmv-legend-bar { height: 10px; border-radius: 100px; }
+.fmv-legend-labels { display: flex; justify-content: space-between; margin-top: 4px; font-size: 0.68rem; color: rgba(255, 255, 255, 0.6); }
+
+.fmv-opacity { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 0.72rem; color: rgba(255, 255, 255, 0.75); }
+.fmv-opacity input { flex: 1; accent-color: var(--mint); }
+
+.fmv-note { margin: 6px 2px 10px; color: rgba(255, 255, 255, 0.8); font-size: 0.76rem; line-height: 1.7; }
+.fmv-warn { margin: 6px 2px 10px; font-size: 0.72rem; line-height: 1.6; color: #F5C84B; }
+
+/* تبويب الأحداث */
+.fmv-seg { display: flex; background: rgba(255, 255, 255, 0.08); border-radius: 100px; padding: 3px; margin-bottom: 10px; }
+.fmv-seg button { flex: 1; border: none; background: none; color: rgba(255, 255, 255, 0.7); font-family: 'Cairo', sans-serif; font-size: 0.74rem; font-weight: 700; padding: 5px 8px; border-radius: 100px; cursor: pointer; }
+.fmv-seg button.active { background: var(--pr); color: #fff; }
+
+.fmv-cats { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.fmv-cat { display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.06); color: #fff; font-family: 'Cairo', sans-serif; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 100px; cursor: pointer; }
+.fmv-cat i, .fmv-event-item i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+.fmv-cat.off { opacity: 0.4; }
+
+.fmv-event-item { width: 100%; display: flex; align-items: center; gap: 10px; text-align: right; background: rgba(255, 255, 255, 0.06); border: none; color: #fff; font-family: 'Cairo', sans-serif; padding: 8px 10px; border-radius: 10px; margin-bottom: 5px; cursor: pointer; }
+.fmv-event-item:hover { background: rgba(77, 191, 136, 0.18); }
+.fmv-event-item span { display: flex; flex-direction: column; min-width: 0; }
+.fmv-event-item strong { font-size: 0.76rem; font-weight: 700; }
+.fmv-event-item small { font-size: 0.66rem; color: rgba(255, 255, 255, 0.55); }
+
+/* تبويب البيانات */
+.fmv-point-head { display: flex; align-items: flex-start; justify-content: space-between; margin: 6px 2px 8px; }
+.fmv-coords { font-size: 0.74rem; color: rgba(255, 255, 255, 0.65); text-align: right; }
+.fmv-section-title { font-weight: 800; font-size: 0.8rem; border-top: 1px solid rgba(255, 255, 255, 0.15); padding-top: 10px; margin-bottom: 6px; }
+.fmv-rows { background: rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 4px 12px; margin-bottom: 10px; }
+.fmv-rows > div { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+.fmv-rows > div:last-child { border-bottom: none; }
+.fmv-rows span { color: rgba(255, 255, 255, 0.65); font-size: 0.72rem; }
+.fmv-rows strong { font-size: 0.78rem; text-align: left; }
+
+.fmv-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 8px;
+  padding: 9px 12px;
+  background: var(--pr);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--ds-duration-fast, 150ms);
+}
+.fmv-action:hover { background: var(--prl); }
+
+.fmv-retry { display: block; margin-top: 6px; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.25); color: #fff; border-radius: 100px; padding: 3px 14px; font-family: 'Cairo', sans-serif; font-size: 0.74rem; font-weight: 700; cursor: pointer; }
+.fmv-source { margin: 10px 2px 0; font-size: 0.66rem; color: rgba(255, 255, 255, 0.5); }
+
+/* ===== أسفل اليمين: إحداثيات + قياس ===== */
+.fmv-bottom-right {
+  position: absolute;
+  right: 10px;
+  bottom: 28px; /* فوق شريط الـ attribution بتاع Leaflet */
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+.fmv-bottom-row { display: flex; align-items: center; gap: 8px; }
+.fmv-coords-readout {
+  background: rgba(12, 35, 24, 0.86);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  padding: 7px 12px;
+  color: #fff;
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+  min-width: 150px;
+  text-align: center;
+  pointer-events: none;
+}
+.fmv-measure-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #F5C84B;
+  color: #3b2f05;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 100px;
+  direction: rtl;
+}
+.fmv-measure-chip button { background: none; border: none; color: inherit; cursor: pointer; display: inline-flex; padding: 0; }
+
+/* ===== الشريط الزمني ===== */
+.fmv-timeline {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  background: rgba(8, 24, 16, 0.98);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+.fmv-date-box { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; flex: none; }
+.fmv-date-box input[type='date'] {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  color: #fff;
+  color-scheme: dark;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 4px 8px;
+}
+.fmv-date-box small { font-size: 0.7rem; color: rgba(255, 255, 255, 0.6); }
+
+.fmv-controls { display: flex; gap: 6px; flex: none; }
+.fmv-controls .fmv-icon-btn { width: 36px; height: 36px; }
+
+.fmv-track { position: relative; flex: 1; min-width: 0; padding-top: 4px; }
+.fmv-track input[type='range'] { width: 100%; margin: 0; accent-color: var(--mint); cursor: pointer; }
+.fmv-ticks { position: relative; height: 16px; margin-top: 2px; }
+.fmv-ticks span { position: absolute; transform: translateX(-50%); font-size: 0.66rem; color: rgba(255, 255, 255, 0.55); white-space: nowrap; }
+
+.fmv-step { display: flex; align-items: center; gap: 6px; flex: none; font-size: 0.74rem; color: rgba(255, 255, 255, 0.7); }
+.fmv-step select { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: #fff; color-scheme: dark; font-family: 'Cairo', sans-serif; font-size: 0.76rem; padding: 3px 6px; }
+.fmv-step select option { color: #18271E; }
+
+/* ===== علامات على الخريطة ===== */
+.fmv-pin-wrap { background: transparent; border: none; }
+.fmv-pin {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.35);
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 3px #22C55E, 0 2px 8px rgba(0, 0, 0, 0.45);
+  animation: fmv-pin-pulse 1.8s ease-out infinite;
+}
+@keyframes fmv-pin-pulse {
+  0% { box-shadow: 0 0 0 3px #22C55E, 0 0 0 0 rgba(34, 197, 94, 0.55); }
+  100% { box-shadow: 0 0 0 3px #22C55E, 0 0 0 16px rgba(34, 197, 94, 0); }
+}
+.fmv-event-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 1px 6px rgba(0, 0, 0, 0.5); }
+@media (prefers-reduced-motion: reduce) { .fmv-pin { animation: none; } }
+
+.fmv-popup { display: flex; flex-direction: column; gap: 2px; direction: rtl; font-family: 'Cairo', sans-serif; }
+.fmv-popup strong { font-size: 0.84rem; }
+.fmv-popup span { font-size: 0.72rem; color: #567060; }
+
+/* ===== تنسيق عناصر Leaflet الأصلية على نفس الأسلوب ===== */
+.fmv-map .leaflet-control-scale-line { background: rgba(12, 35, 24, 0.78); color: #fff; border-color: #fff; font-family: 'Cairo', sans-serif; }
+.fmv-map .leaflet-control-attribution { background: rgba(12, 35, 24, 0.7); color: rgba(255, 255, 255, 0.7); font-size: 0.62rem; }
+.fmv-map .leaflet-control-attribution a { color: var(--sage); }
+.fmv-map .leaflet-popup-content-wrapper { border-radius: 12px; }
+
+/* ===== إشعار صغير ===== */
+.fmv-toast {
+  position: absolute;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1200;
+  background: var(--pr);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 100px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  direction: rtl;
+}
+
+/* ===== نافذة المعلومات ===== */
+.fmv-modal-backdrop { position: fixed; inset: 0; z-index: 3000; background: rgba(0, 0, 0, 0.55); display: flex; align-items: center; justify-content: center; padding: 16px; }
+.fmv-modal { position: relative; width: 100%; max-width: 440px; background: #fff; color: var(--text); border-radius: var(--ds-radius-dialog, 24px); padding: 22px 24px; direction: rtl; font-family: 'Cairo', sans-serif; }
+.fmv-modal h3 { margin: 0 0 12px; font-size: 1.05rem; font-weight: 800; }
+.fmv-modal ul { margin: 0 0 12px; padding: 0 18px 0 0; font-size: 0.84rem; line-height: 1.9; }
+.fmv-modal .fmv-source { color: var(--tm); margin: 0; }
+.fmv-modal-close { position: absolute; top: 12px; left: 12px; color: var(--tm) !important; }
+
+/* ===== الموبايل ===== */
+@media (max-width: 700px) {
+  .fmv-shell { height: calc(100vh - 170px); min-height: 560px; border-radius: var(--r); }
+  .fmv-topbar { left: 10px; }
+  .fmv-search { flex: 1; width: auto; min-width: 0; }
+  .fmv-topbar > .fmv-icon-btn:not(:last-child) { display: none; } /* على الموبايل بنسيب البحث + زرار المعلومات بس */
+  .fmv-zoom { display: none; }
+  .fmv-panel { top: 58px; width: calc(100% - 20px); max-height: 50%; }
+  .fmv-coords-readout { display: none; }
+  .fmv-timeline { flex-wrap: wrap; gap: 8px 12px; padding: 8px 12px; }
+  .fmv-track { order: 5; flex: 1 1 100%; }
+  .fmv-step { margin-inline-start: auto; }
+}
+
+/* ===== الوضع الداكن ===== */
+[data-theme='dark'] .fmv-shell { border-color: #263129; }
+[data-theme='dark'] .fmv-modal { background: #17211c; color: #eef3ee; }
+[data-theme='dark'] .fmv-modal .fmv-source,
+[data-theme='dark'] .fmv-popup span { color: #9aa79f; }
+[data-theme='dark'] .fmv-map .leaflet-popup-content-wrapper,
+[data-theme='dark'] .fmv-map .leaflet-popup-tip { background: #17211c; color: #eef3ee; }

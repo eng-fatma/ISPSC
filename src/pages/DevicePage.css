@@ -1,0 +1,258 @@
+.dv-page { max-width: 640px; margin: 0 auto; font-family: 'Cairo', sans-serif; }
+
+.dv-header { margin-bottom: 20px; }
+.dv-breadcrumb { font-size: 0.8rem; color: var(--tl); margin-bottom: 6px; }
+.dv-header h1 { font-size: 1.6rem; font-weight: 800; color: var(--dark); margin-bottom: 4px; }
+.dv-header p { color: var(--tm); font-size: 0.88rem; }
+
+.dv-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--rl);
+  padding: 36px 24px;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 24px rgba(15, 66, 41, 0.06);
+}
+
+.dv-stage {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: dv-fade 0.35s ease;
+}
+.dv-stage h2 { font-size: 1.15rem; font-weight: 800; color: var(--dark); margin: 22px 0 6px; }
+.dv-stage p { color: var(--tm); font-size: 0.88rem; margin-bottom: 22px; max-width: 360px; }
+
+/* ───── الرادار ───── */
+.dv-radar {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  display: grid;
+  place-items: center;
+}
+.dv-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--sage);
+  opacity: 0.3;
+}
+.dv-ring.r2 { transform: scale(0.72); }
+.dv-ring.r3 { transform: scale(0.46); }
+
+.dv-core {
+  position: relative;
+  z-index: 2;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(135deg, var(--prd), var(--prl));
+  box-shadow: 0 8px 22px rgba(26, 107, 66, 0.35);
+}
+
+.dv-radar.is-active .dv-ring { opacity: 0; animation: dv-ping 2.4s ease-out infinite; }
+.dv-radar.is-active .dv-ring.r2 { animation-delay: 0.8s; }
+.dv-radar.is-active .dv-ring.r3 { animation-delay: 1.6s; }
+
+.dv-sweep {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, rgba(77, 191, 136, 0.45), rgba(77, 191, 136, 0) 70deg, rgba(77, 191, 136, 0) 360deg);
+  animation: dv-spin 2s linear infinite;
+}
+
+/* ───── الأزرار ───── */
+.dv-primary-btn {
+  font-family: inherit;
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: #fff;
+  border: none;
+  border-radius: 100px;
+  padding: 15px 44px;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--prd), var(--pr));
+  box-shadow: 0 8px 20px rgba(26, 107, 66, 0.32);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.dv-primary-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(26, 107, 66, 0.4); }
+.dv-primary-btn:active { transform: scale(0.97); }
+
+.dv-ghost-btn {
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--pr);
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 100px;
+  padding: 10px 28px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.dv-ghost-btn:hover { border-color: var(--pr); background: var(--cream); }
+
+/* ───── قائمة الأجهزة ───── */
+.dv-stage-list h2 { margin-top: 0; }
+.dv-list { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+
+.dv-device {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  font-family: inherit;
+  text-align: right;
+  background: var(--cream);
+  border: 1.5px solid transparent;
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: 0.2s;
+  animation: dv-rise 0.4s ease backwards;
+}
+.dv-device:nth-child(2) { animation-delay: 0.1s; }
+.dv-device:nth-child(3) { animation-delay: 0.2s; }
+.dv-device:hover { border-color: var(--pr); background: #fff; box-shadow: 0 6px 16px rgba(15, 66, 41, 0.1); }
+
+.dv-device-icon {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  color: var(--pr);
+  background: #fff;
+}
+.dv-device-icon svg { width: 26px; height: 26px; }
+.dv-device-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.dv-device-info strong { font-size: 0.95rem; color: var(--dark); }
+.dv-device-info small { font-size: 0.76rem; color: var(--tl); letter-spacing: 0.5px; }
+.dv-device-arrow { color: var(--tl); display: grid; }
+
+.dv-signal { display: inline-flex; align-items: flex-end; gap: 3px; }
+.dv-signal i { width: 4px; border-radius: 2px; background: var(--border); }
+.dv-signal i.on { background: var(--mint); }
+
+/* ───── النجاح ───── */
+.dv-success {
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(135deg, var(--pr), var(--mint));
+  box-shadow: 0 0 0 10px rgba(77, 191, 136, 0.15), 0 10px 26px rgba(26, 107, 66, 0.35);
+  animation: dv-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.dv-check-path { stroke-dasharray: 26; stroke-dashoffset: 26; animation: dv-draw 0.45s 0.3s ease forwards; }
+.dv-stage h2.dv-success-title { color: var(--pr); }
+
+/* ───── رسالة إذن البلوتوث ───── */
+.dv-denied {
+  margin-top: 16px;
+  max-width: 340px;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.7;
+  color: #8a5a00;
+  background: #fff6e0;
+  border: 1px solid #f1d9a0;
+  border-radius: var(--r);
+  animation: dv-fade 0.3s ease;
+}
+
+.dv-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(15, 66, 41, 0.45);
+  backdrop-filter: blur(3px);
+  animation: dv-fade-only 0.2s ease;
+}
+
+.dv-dialog {
+  width: 100%;
+  max-width: 340px;
+  padding: 28px 22px 22px;
+  text-align: center;
+  background: var(--white);
+  border-radius: var(--rl);
+  box-shadow: 0 20px 50px rgba(15, 66, 41, 0.3);
+  animation: dv-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.dv-dialog-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(135deg, var(--prd), var(--prl));
+  box-shadow: 0 8px 20px rgba(26, 107, 66, 0.32);
+}
+.dv-dialog h3 { font-size: 1.1rem; font-weight: 800; color: var(--dark); margin-bottom: 8px; }
+.dv-dialog p { font-size: 0.88rem; line-height: 1.8; color: var(--tm); margin-bottom: 20px; }
+.dv-dialog-actions { display: flex; flex-direction: column; gap: 10px; }
+.dv-dialog-btn { width: 100%; padding-top: 12px; padding-bottom: 12px; }
+
+/* ───── الحركات ───── */
+@keyframes dv-ping { 0% { transform: scale(0.3); opacity: 0.65; } 100% { transform: scale(1); opacity: 0; } }
+@keyframes dv-spin { to { transform: rotate(360deg); } }
+@keyframes dv-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes dv-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes dv-pop { from { transform: scale(0.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes dv-draw { to { stroke-dashoffset: 0; } }
+@keyframes dv-fade-only { from { opacity: 0; } to { opacity: 1; } }
+
+@media (max-width: 480px) {
+  .dv-card { padding: 28px 16px; min-height: 380px; }
+  .dv-radar { width: 190px; height: 190px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dv-stage, .dv-device, .dv-success, .dv-overlay, .dv-dialog, .dv-denied { animation: none; }
+  .dv-radar.is-active .dv-ring, .dv-sweep { animation: none; }
+  .dv-check-path { animation: none; stroke-dashoffset: 0; }
+}
+/* ───── القراءات الحية من الجهاز (البلوتوث) ───── */
+.dv-live { width: 100%; max-width: 520px; margin: 4px 0 20px; }
+.dv-banner {
+  padding: 9px 14px; border-radius: var(--r); font-size: 0.82rem; font-weight: 700; line-height: 1.7;
+  margin-bottom: 14px; border: 1px solid transparent;
+}
+.dv-banner-ok { color: var(--prd); background: #e8f5ee; border-color: #bfe3cf; }
+.dv-banner-wait { color: var(--tm); background: var(--cream); border-color: var(--border); }
+.dv-banner-warn { color: #8a5a00; background: #fff6e0; border-color: #f1d9a0; }
+.dv-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; transition: opacity 0.3s; }
+.dv-tiles.is-dim { opacity: 0.45; }
+.dv-tile {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 12px 8px; background: var(--cream); border: 1px solid var(--border); border-radius: var(--r);
+}
+.dv-tile-label { font-size: 0.76rem; color: var(--tm); font-weight: 700; }
+.dv-tile-value { font-size: 1.45rem; font-weight: 800; color: var(--dark); line-height: 1.3; }
+.dv-tile-unit { font-size: 0.72rem; color: var(--tl); min-height: 1em; }
+.dv-stage p.dv-note { margin: 12px auto 0; font-size: 0.76rem; color: var(--tl); max-width: 420px; line-height: 1.8; }
+.dv-last-device { margin-top: 18px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; font-size: 0.8rem; color: var(--tm); }
+.dv-link-btn { border: none; background: none; cursor: pointer; font-family: inherit; font-size: 0.8rem; font-weight: 700; color: var(--pr); text-decoration: underline; padding: 2px 4px; }
+@media (max-width: 420px) { .dv-tiles { grid-template-columns: repeat(2, 1fr); } }
+
+.dv-err-detail { display: block; margin-top: 6px; font-weight: 400; font-size: 0.7rem; opacity: 0.75; word-break: break-word; text-align: left; }

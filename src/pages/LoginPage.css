@@ -1,0 +1,105 @@
+/* src/pages/LoginPage.css — نفس الهوية البصرية: أخضر ISPSC + ذهبي + كريمي + خط Cairo.
+   الألوان ثابتة هنا (مش متغيرة مع الوضع الداكن) عشان صفحة الدخول تفضل واضحة دايماً. */
+.lg-page {
+  --lg-pr: #1A6B42; --lg-prd: #0F4229; --lg-mint: #4DBF88; --lg-gold: #C9A84C;
+  --lg-cream: #F4F0E6; --lg-cream-d: #EAE5D8; --lg-text: #18271E; --lg-tm: #567060; --lg-border: #D4E4DA;
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px 16px;
+  font-family: 'Cairo', sans-serif;
+  color: var(--lg-text);
+  background: linear-gradient(160deg, #0F4229 0%, #1A6B42 55%, #0C2318 100%);
+  overflow: hidden;
+}
+.lg-glow {
+  position: absolute; inset: auto -10% -30% auto; width: 60vmax; height: 60vmax; pointer-events: none;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.22) 0%, rgba(201, 168, 76, 0) 62%);
+}
+.lg-card {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 440px;
+  background: #fff;
+  border-radius: 24px;
+  padding: 30px 28px 26px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+.lg-brand { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 20px; }
+.lg-logo {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--lg-prd);
+  border: 1px solid rgba(77, 191, 136, 0.35);
+  border-radius: 14px;
+  padding: 6px 16px 6px 10px;
+}
+.lg-logo-img { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; }
+.lg-logo-txt { font-size: 1.3rem; font-weight: 800; color: #fff; letter-spacing: 0.5px; }
+.lg-logo-txt span { color: var(--lg-gold); }
+.lg-tagline { font-size: 0.86rem; color: var(--lg-tm); font-weight: 600; text-align: center; }
+
+.lg-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background: var(--lg-cream-d); padding: 4px; border-radius: 14px; margin-bottom: 18px; }
+.lg-tab {
+  border: none; background: transparent; cursor: pointer; font-family: inherit;
+  padding: 10px 8px; border-radius: 11px; font-size: 0.92rem; font-weight: 700; color: var(--lg-tm);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.lg-tab.active { background: #fff; color: var(--lg-pr); box-shadow: 0 2px 8px rgba(15, 66, 41, 0.12); }
+.lg-tab:focus-visible, .lg-btn:focus-visible, .lg-eye:focus-visible { outline: 3px solid rgba(77, 191, 136, 0.55); outline-offset: 2px; }
+
+.lg-form { display: flex; flex-direction: column; gap: 14px; }
+.lg-field { display: flex; flex-direction: column; gap: 6px; }
+.lg-field label { font-size: 0.86rem; font-weight: 700; color: var(--lg-text); }
+.lg-field input {
+  width: 100%; height: 48px; padding: 0 14px;
+  border: 1.5px solid var(--lg-border); border-radius: 14px;
+  background: #fff; color: var(--lg-text);
+  font-family: inherit; font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.lg-field input[dir='ltr'] { text-align: left; }
+.lg-field input::placeholder { color: #9bb0a3; }
+.lg-field input:focus { outline: none; border-color: var(--lg-mint); box-shadow: 0 0 0 4px rgba(77, 191, 136, 0.2); }
+.lg-pass { position: relative; }
+.lg-pass input { padding-right: 14px; padding-left: 46px; }
+.lg-eye {
+  position: absolute; left: 6px; top: 50%; transform: translateY(-50%);
+  width: 36px; height: 36px; border: none; background: transparent; cursor: pointer;
+  color: var(--lg-tm); border-radius: 10px; display: grid; place-items: center;
+}
+.lg-eye:hover { background: var(--lg-cream); }
+.lg-hint { color: var(--lg-tm); font-size: 0.78rem; }
+
+.lg-alert { border-radius: 12px; padding: 10px 14px; font-size: 0.86rem; font-weight: 600; line-height: 1.7; display: flex; flex-direction: column; gap: 2px; }
+.lg-alert-error { background: #FDECEC; color: #B3261E; border: 1px solid #F5C2C0; }
+.lg-alert-info { background: #E8F5EE; color: var(--lg-prd); border: 1px solid #BFE3CF; }
+
+.lg-btn {
+  width: 100%; height: 50px; border-radius: 14px; border: 1.5px solid transparent;
+  font-family: inherit; font-size: 1rem; font-weight: 800; cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s, background 0.2s, opacity 0.2s;
+}
+.lg-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.lg-btn:not(:disabled):active { transform: scale(0.985); }
+.lg-btn-primary { background: linear-gradient(135deg, var(--lg-pr), #27885A); color: #fff; box-shadow: 0 8px 20px rgba(26, 107, 66, 0.3); }
+.lg-btn-primary:not(:disabled):hover { box-shadow: 0 10px 26px rgba(26, 107, 66, 0.4); }
+.lg-btn-demo { background: #fff; color: #7A5C16; border-color: var(--lg-gold); }
+.lg-btn-demo:not(:disabled):hover { background: #FBF6E6; }
+
+.lg-demo { margin-top: 4px; }
+.lg-or { display: flex; align-items: center; gap: 12px; margin: 16px 0 14px; color: var(--lg-tm); font-size: 0.8rem; font-weight: 700; }
+.lg-or::before, .lg-or::after { content: ''; flex: 1; height: 1px; background: var(--lg-border); }
+.lg-demo-note { margin-top: 10px; font-size: 0.78rem; color: var(--lg-tm); line-height: 1.8; text-align: center; }
+
+.lg-foot { position: relative; z-index: 1; font-size: 0.78rem; color: rgba(255, 255, 255, 0.7); }
+
+@media (max-width: 480px) {
+  .lg-card { padding: 24px 18px 22px; border-radius: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lg-btn, .lg-tab, .lg-field input { transition: none; }
+}

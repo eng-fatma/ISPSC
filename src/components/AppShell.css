@@ -1,0 +1,45 @@
+html, body {
+
+  max-width: 100%;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  max-width: 100%;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  margin-top: 66px;
+}
+
+.app-main {
+  flex: 1;
+  padding: 24px;
+  background: var(--cream);
+  min-width: 0;
+}
+
+.app-sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .app-main { padding: 16px; }
+  .app-sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    top: 66px;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 140;
+    animation: mf-backdrop-fade 0.2s ease;
+  }
+}
+
+@keyframes mf-backdrop-fade { from { opacity: 0; } to { opacity: 1; } }

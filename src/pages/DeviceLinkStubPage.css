@@ -1,0 +1,11 @@
+/* src/pages/DeviceLinkStubPage.css */
+.device-stub-page { max-width: 600px; margin: 0 auto; padding: 40px 20px; font-family: 'Cairo', sans-serif; }
+.device-stub-back {
+  display: flex; align-items: center; gap: 8px; background: none; border: none;
+  color: var(--pr); font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-bottom: 30px;
+}
+.device-stub-content { text-align: center; background: var(--white); border-radius: var(--rl); padding: 60px 30px; border: 1px solid var(--border); }
+.device-stub-icon { color: var(--pr); display: flex; justify-content: center; margin-bottom: 20px; }
+.device-stub-icon svg { width: 48px; height: 48px; }
+.device-stub-content h2 { font-size: 1.3rem; font-weight: 800; color: var(--dark); margin-bottom: 12px; }
+.device-stub-content p { color: var(--tm); line-height: 1.7; }

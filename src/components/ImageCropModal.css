@@ -1,0 +1,71 @@
+.crop-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 35, 24, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.crop-modal-box {
+  background: var(--white);
+  border-radius: var(--rl);
+  padding: 24px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+}
+
+.crop-modal-box h3 {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 16px;
+}
+
+.crop-area-wrapper {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  background: #222;
+  border-radius: var(--rs);
+  overflow: hidden;
+}
+
+.crop-zoom-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.85rem;
+  color: var(--tm);
+}
+.crop-zoom-row input[type="range"] { flex: 1; accent-color: var(--pr); }
+
+.crop-actions-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.crop-cancel-btn, .crop-confirm-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: var(--rs);
+  font-family: 'Cairo', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: none;
+  transition: 0.2s;
+}
+.crop-cancel-btn { background: var(--cream); color: var(--tm); }
+.crop-cancel-btn:hover { background: var(--cream-d); }
+.crop-confirm-btn { background: var(--pr); color: #fff; }
+.crop-confirm-btn:hover { background: var(--prd); }
+.crop-confirm-btn:disabled, .crop-cancel-btn:disabled { opacity: 0.6; cursor: not-allowed; }
