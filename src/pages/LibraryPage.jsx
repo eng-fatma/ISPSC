@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
-import { supabase } from '../lib/supabase'
-import './LibraryPage.css'
+   import { supabase } from '../lib/supabaseClient'
+   import './LibraryPage.css'
 
 const IconLeaf = () => (
   <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M8 32c0-14 8-22 22-22 0 14-8 22-22 22z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"/><path d="M8 32c4-8 10-14 18-18" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>

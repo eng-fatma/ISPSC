@@ -715,7 +715,8 @@ function PlotPhotosTab({ plotId, seasonId, showToast }) {
     const file = e.target.files[0];
     if (!file) return;
     setUploading(true);
-    const path = `${plotId}/${Date.now()}_${file.name}`;
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
+const path = `${plotId}/${Date.now()}.${ext || 'jpg'}`;
     const { error: uploadError } = await supabase.storage.from('plot-media').upload(path, file);
     if (uploadError) {
       showToast('حدث خطأ أثناء رفع الصورة');
