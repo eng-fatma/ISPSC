@@ -11,7 +11,7 @@ const REAL_TABLES = new Set([
   // المرحلة 5
   'notifications', 'plot_media',
 ])
-const REAL_BUCKETS = new Set(['chat-images', 'plot-media'])
+const REAL_BUCKETS = new Set(['chat-images', 'plot-media', 'avatars', 'covers'])
 const REAL_RPCS = new Set(['save_crop_prediction_run'])
 
 // قنوات Realtime: الإشعارات بس حقيقية. باقي القنوات (زي online-users) لسه mock.

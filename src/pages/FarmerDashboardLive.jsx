@@ -111,9 +111,21 @@ export default function FarmerDashboardLive() {
     weather,
     allAlerts,
     unreadNotifications,
+    tasks,
     refresh,
+    completeTask,
   } = useFarmerDashboard()
   const [weatherOpen, setWeatherOpen] = useState(false)
+  const [busyTaskId, setBusyTaskId] = useState(null)
+  const [taskError, setTaskError] = useState('')
+
+  async function handleCompleteTask(taskId) {
+    setBusyTaskId(taskId)
+    setTaskError('')
+    const result = await completeTask(taskId)
+    if (!result.ok) setTaskError(result.message)
+    setBusyTaskId(null)
+  }
 
   if (loading) return <DashboardSkeleton stage={stage} />
 
@@ -250,6 +262,40 @@ export default function FarmerDashboardLive() {
             ))}
           </div>
           <button className="live-dash-link-btn" onClick={() => navigate('/predict')}>افتح توقع المحاصيل <ArrowLeft size={14} /></button>
+        </section>
+
+        <section className="live-dash-card live-dash-reveal" style={{ '--delay': '340ms' }}>
+          <div className="live-dash-card-head">
+            <span><CheckCircle2 size={17} /> المهام الزراعية</span>
+            {tasks.some((task) => task.overdue) && <span className="live-dash-counter overdue">{numberFormat(tasks.filter((task) => task.overdue).length)} متأخرة</span>}
+          </div>
+          {tasks.length > 0 ? (
+            <div className="live-dash-task-list">
+              {tasks.map((task) => (
+                <div className={`live-dash-task ${task.overdue ? 'overdue' : ''}`} key={task.id}>
+                  <button
+                    type="button"
+                    className="live-dash-task-check"
+                    onClick={() => handleCompleteTask(task.id)}
+                    disabled={busyTaskId === task.id}
+                    aria-label={`تمت مهمة ${task.label}`}
+                    title="تمت المهمة"
+                  >
+                    {busyTaskId === task.id ? <Loader2 size={18} className="live-dash-loading-spin" /> : <Circle size={18} />}
+                  </button>
+                  <span className="live-dash-task-text">
+                    <strong>{task.label}</strong>
+                    <small>
+                      {[task.plotName, task.date ? new Date(task.date).toLocaleDateString('ar-EG') : null].filter(Boolean).join(' — ')}
+                      {task.overdue ? ' — فات موعدها' : ''}
+                    </small>
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : <div className="live-dash-card-empty">مفيش مهام معلّقة دلوقتي. المهام بتتعمل تلقائياً لما تبدئي موسم جديد في قطعة.</div>}
+          {taskError && <div className="live-dash-task-error">{taskError}</div>}
+          <button className="live-dash-link-btn" onClick={() => navigate('/my-farm')}>فتح أرضي <ArrowLeft size={14} /></button>
         </section>
 
         <section className="live-dash-card live-dash-reveal" style={{ '--delay': '390ms' }}>

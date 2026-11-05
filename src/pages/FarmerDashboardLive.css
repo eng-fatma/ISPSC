@@ -543,3 +543,75 @@
     transition: none;
   }
 }
+
+/* ===== كارت المهام ===== */
+.live-dash-task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 13px;
+}
+
+.live-dash-task {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.8rem;
+}
+
+.live-dash-task-check {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--tl);
+  cursor: pointer;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.live-dash-task-check:hover:not(:disabled) {
+  color: #26945a;
+  transform: scale(1.1);
+}
+
+.live-dash-task-check:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.live-dash-task-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.live-dash-task-text strong {
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.live-dash-task-text small {
+  color: var(--tl);
+  font-size: 0.68rem;
+}
+
+.live-dash-task.overdue .live-dash-task-text small {
+  color: #c43b32;
+  font-weight: 700;
+}
+
+.live-dash-counter.overdue {
+  color: #c43b32;
+  background: rgba(196, 59, 50, 0.1);
+}
+
+.live-dash-task-error {
+  margin-bottom: 10px;
+  color: #c43b32;
+  font-size: 0.72rem;
+  line-height: 1.6;
+}

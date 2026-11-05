@@ -59,26 +59,25 @@ function SettingsPage() {
   }, [])
 
   async function persistProfile(patch) {
-  const updated = { ...profile, ...patch }
-  setProfile(updated)
-  const { error } = await supabase.from('profiles').upsert({
-    id: userId,
-    full_name: updated.full_name,
-    phone: updated.phone,
-    bio: updated.bio,
-    governorate: updated.governorate,
-    center: updated.center,
-    avatar_url: updated.avatar_url,
-    cover_url: updated.cover_url,
-    notification_settings: updated.notification_settings,
-    updated_at: new Date().toISOString()
-  })
-  if (error) {
-    setMessage({ type: 'error', text: 'فشل الحفظ: ' + error.message })
-    return false
+    const updated = { ...profile, ...patch }
+    setProfile(updated)
+    // update مش upsert: جدول profiles مفيهوش سياسة insert، والصف بيتعمل بالـ trigger وقت التسجيل
+    const { data, error } = await supabase.from('profiles').update({
+      full_name: updated.full_name,
+      phone: updated.phone,
+      bio: updated.bio,
+      governorate: updated.governorate,
+      center: updated.center,
+      avatar_url: updated.avatar_url,
+      cover_url: updated.cover_url,
+      notification_settings: updated.notification_settings
+    }).eq('id', userId).select('id')
+    if (error || !data || data.length === 0) {
+      setMessage({ type: 'error', text: 'فشل الحفظ: ' + (error?.message || 'مفيش بروفايل للحساب ده في قاعدة البيانات') })
+      return false
+    }
+    return true
   }
-  return true
-}
 
   function startEdit(field, currentValue) { setEditField(field); setTempValue(currentValue || '') }
 
@@ -86,9 +85,9 @@ function SettingsPage() {
     const fieldMap = { name: 'full_name', phone: 'phone', governorate: 'governorate', center: 'center' }
     const dbField = fieldMap[editField]
     if (editField === 'name') await supabase.auth.updateUser({ data: { full_name: tempValue } })
-    await persistProfile({ [dbField]: tempValue })
+    const saved = await persistProfile({ [dbField]: tempValue })
     setEditField(null)
-    setMessage({ type: 'success', text: 'تم الحفظ' })
+    if (saved) setMessage({ type: 'success', text: 'تم الحفظ' })
   }
 
   function handleFileSelect(e, target) {
@@ -113,9 +112,9 @@ function SettingsPage() {
     const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(filePath)
     const freshUrl = `${urlData.publicUrl}?t=${Date.now()}`
     const fieldName = cropTarget === 'avatar' ? 'avatar_url' : 'cover_url'
-    await persistProfile({ [fieldName]: freshUrl })
+    const saved = await persistProfile({ [fieldName]: freshUrl })
     setUploadingImage(false); setCropTarget(null)
-    setMessage({ type: 'success', text: 'تم تحديث الصورة بنجاح' })
+    if (saved) setMessage({ type: 'success', text: 'تم تحديث الصورة بنجاح' })
   }
 
   async function toggleMuteAll() {

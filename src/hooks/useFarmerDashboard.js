@@ -72,8 +72,9 @@ export function useFarmerDashboard() {
     weather: null,
     weatherLoading: false,
   })
-  const loadDashboard = useCallback(async () => {
-    setDashboard((previous) => ({ ...previous, loading: true, stage: 'auth', error: '', warnings: [] }))
+  const loadDashboard = useCallback(async ({ silent = false } = {}) => {
+    // silent: تحديث من غير ما الشاشة تظهر كأنها بتحمّل من الأول (بنستخدمه بعد "تم" على مهمة)
+    if (!silent) setDashboard((previous) => ({ ...previous, loading: true, stage: 'auth', error: '', warnings: [] }))
 
 
     const { data: userData, error: userError } = await supabase.auth.getUser()
@@ -138,7 +139,7 @@ export function useFarmerDashboard() {
     const taskRows = plotIds.length > 0
       ? await readOptionalQuery(
         'المهام الزراعية',
-        supabase.from('tasks').select('*').in('plot_id', plotIds).order('scheduled_date', { ascending: true }).limit(12),
+        supabase.from('tasks').select('*').in('plot_id', plotIds).neq('status', 'مكتمل').order('scheduled_date', { ascending: true }).limit(12),
         warnings
       )
       : []
@@ -156,11 +157,15 @@ export function useFarmerDashboard() {
       displayStatus: pickCropStatus(plot, overduePlotIds),
     }))
 
+    const plotNameById = new Map(plotRows.map((plot) => [plot.id, plot.name]))
+    const todayIso = new Date().toISOString().slice(0, 10)
     const tasks = taskRows.slice(0, 4).map((task) => ({
       id: task.id,
       label: firstText(task.title, task.name, task.description, 'مهمة زراعية'),
       done: ['مكتمل', 'completed', 'done'].includes(task.status) || Boolean(task.completed_at),
       date: task.scheduled_date || null,
+      plotName: plotNameById.get(task.plot_id) || '',
+      overdue: Boolean(task.scheduled_date && task.scheduled_date < todayIso),
     }))
 
     const activities = historyRows.map((event) => ({
@@ -218,6 +223,20 @@ export function useFarmerDashboard() {
     return () => window.clearTimeout(timer)
   }, [loadDashboard])
 
+  // تعليم مهمة إنها اتعملت. RLS على جدول tasks هي اللي بتضمن إن المزارعة تعدّل مهامها هي بس
+  const completeTask = useCallback(async (taskId) => {
+    const { data, error } = await supabase
+      .from('tasks')
+      .update({ status: 'مكتمل', completed_at: new Date().toISOString() })
+      .eq('id', taskId)
+      .select('id')
+    if (error || !data || data.length === 0) {
+      return { ok: false, message: error?.message || 'مش مسموح تعدّلي المهمة دي، أو اتمسحت.' }
+    }
+    await loadDashboard({ silent: true })
+    return { ok: true }
+  }, [loadDashboard])
+
   const unreadNotifications = notifications.filter((notification) => !notification.is_read)
   const allAlerts = notifications.slice(0, 4)
 
@@ -228,5 +247,6 @@ export function useFarmerDashboard() {
     unreadNotifications,
     allAlerts,
     refresh: loadDashboard,
+    completeTask,
   }
 }
