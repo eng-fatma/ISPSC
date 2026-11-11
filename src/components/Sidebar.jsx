@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useUserRole } from '../context/UserRoleContext'
+import { useLanguage } from '../context/LanguageContext'
 import { SIDEBAR_GROUPS, ROUTE_MAP, ICONS } from '../data/sidebarGroups'
 import './Sidebar.css'
 
@@ -11,6 +12,7 @@ function SidebarIcon({ name }) {
 
 function Sidebar({ isOpen }) {
   const { userRole } = useUserRole()
+  const { t } = useLanguage()
   const location = useLocation()
   
   // تحديث المسارات لضمان وجود صفحة الإعدادات بشكل مستقل
@@ -22,7 +24,7 @@ function Sidebar({ isOpen }) {
       <div className="sidebar-scroll">
         {groups.map((group) => (
           <div className="sidebar-group" key={group.label}>
-            <div className="sidebar-group-label">{group.label}</div>
+            <div className="sidebar-group-label">{t(group.labelKey)}</div>
             {group.items.map((item) => {
               const path = updatedRouteMap[item.id] || '#'
               // استخدام === لضمان عدم تداخل الإضاءة بين المسارات المتشابهة
@@ -34,7 +36,7 @@ function Sidebar({ isOpen }) {
                   className={`sidebar-item ${isActive ? 'active' : ''}`}
                 >
                   <SidebarIcon name={item.id} />
-                  <span>{item.label}</span>
+                  <span>{t(`sidebar.${item.id}`)}</span>
                 </Link>
               )
             })}
