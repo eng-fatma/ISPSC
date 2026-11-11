@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useNotifications } from '../hooks/useNotifications'
 import { useAuth } from '../context/authState'
+import { useLanguage } from '../context/LanguageContext'
 import logoSmall from '../assets/logo-small.png'
 import './AppNavbar.css'
 
@@ -11,11 +12,14 @@ function StarIcon() { return (<svg viewBox="0 0 20 20" width="14" height="14" fi
 function SunIcon() { return (<svg viewBox="0 0 20 20" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="10" cy="10" r="3.5" /><path d="M10 2v2M10 16v2M3.5 3.5l1.4 1.4M15.1 15.1l1.4 1.4M2 10h2M16 10h2M3.5 16.5l1.4-1.4M15.1 4.9l1.4-1.4" /></svg>) }
 function MoonIcon() { return (<svg viewBox="0 0 20 20" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 11.5A7 7 0 018.5 3 7 7 0 1017 11.5z" /></svg>) }
 
+function GlobeIcon() { return (<svg viewBox="0 0 20 20" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="10" cy="10" r="7.5" /><path d="M2.5 10h15" /><path d="M10 2.5c2.2 2.3 3.3 4.8 3.3 7.5s-1.1 5.2-3.3 7.5c-2.2-2.3-3.3-4.8-3.3-7.5S7.8 4.8 10 2.5z" /></svg>) }
+
 function LogoutIcon() { return (<svg viewBox="0 0 20 20" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H4.5A1.5 1.5 0 003 4.5v11A1.5 1.5 0 004.5 17H8" /><path d="M13 6l4 4-4 4" /><path d="M17 10H8" /></svg>) }
 
 function AppNavbar({ onToggleSidebar }) {
   const { unreadCount } = useNotifications()
   const { signOut } = useAuth()
+  const { lang, toggleLang, t, td } = useLanguage()
   const [displayName, setDisplayName] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
   const [theme, setTheme] = useState(() => localStorage.getItem('ispsc_theme') || 'light')
@@ -69,7 +73,18 @@ function AppNavbar({ onToggleSidebar }) {
       </div>
       <div className="app-nav-spacer"></div>
 
-      <button className="app-nav-bell" onClick={() => navigate('/alerts')} title="التنبيهات">
+      <button
+        type="button"
+        className="app-nav-lang"
+        onClick={toggleLang}
+        title={t('nav.switchLang')}
+        aria-label={t('nav.switchLang')}
+      >
+        <GlobeIcon />
+        <span>{lang === 'ar' ? 'EN' : 'عربي'}</span>
+      </button>
+
+      <button className="app-nav-bell" onClick={() => navigate('/alerts')} title={t('nav.alerts')}>
         <BellIcon />
         {unreadCount > 0 && (
           <span className="app-nav-bell-badge">{unreadCount > 9 ? '9+' : unreadCount}</span>
@@ -81,15 +96,15 @@ function AppNavbar({ onToggleSidebar }) {
           <div className="app-nav-av">
             {avatarUrl ? <img src={avatarUrl} alt={displayName} /> : (displayName ? displayName.charAt(0).toUpperCase() : 'U')}
           </div>
-          <div className="app-nav-role">{displayName || 'مستخدم'}</div>
+          <div className="app-nav-role">{displayName ? td(displayName) : t('nav.user')}</div>
         </button>
 
         {menuOpen && (
           <div className="app-account-menu">
-            <Link to="/points" className="app-account-menu-item" onClick={() => setMenuOpen(false)}><StarIcon /> النجوم</Link>
-            <button className="app-account-menu-item" onClick={toggleTheme}>{theme === 'dark' ? <SunIcon /> : <MoonIcon />} {theme === 'dark' ? 'الوضع الفاتح' : 'الوضع الداكن'}</button>
+            <Link to="/points" className="app-account-menu-item" onClick={() => setMenuOpen(false)}><StarIcon /> {t('nav.stars')}</Link>
+            <button className="app-account-menu-item" onClick={toggleTheme}>{theme === 'dark' ? <SunIcon /> : <MoonIcon />} {theme === 'dark' ? t('nav.lightMode') : t('nav.darkMode')}</button>
             <div className="app-account-menu-divider" />
-            <button className="app-account-menu-item app-account-menu-danger" onClick={() => { setMenuOpen(false); signOut() }}><LogoutIcon /> تسجيل الخروج</button>
+            <button className="app-account-menu-item app-account-menu-danger" onClick={() => { setMenuOpen(false); signOut() }}><LogoutIcon /> {t('nav.logout')}</button>
           </div>
         )}
       </div>
